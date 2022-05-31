@@ -2,6 +2,7 @@ package com.dagnis.carRestApi;
 
 import com.dagnis.carRestApi.model.Car;
 import com.dagnis.carRestApi.model.swagger.ErrorSchema;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -63,7 +64,7 @@ public class CarController {
                             array = @ArraySchema(schema = @Schema(implementation = Car.class)))})
     })
     @GetMapping("/export-car-json")
-    public ResponseEntity<byte[]> exportCarJson() {
+    public ResponseEntity<byte[]> exportCarJson() throws JsonProcessingException {
         return carService.exportCarsToJson();
     }
 

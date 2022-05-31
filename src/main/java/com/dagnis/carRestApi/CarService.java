@@ -1,7 +1,8 @@
 package com.dagnis.carRestApi;
 
 import com.dagnis.carRestApi.model.Car;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,11 +33,10 @@ public class CarService {
         return cars;
     }
 
-    public ResponseEntity<byte[]> exportCarsToJson() {
-        Gson gson = new Gson();
+    public ResponseEntity<byte[]> exportCarsToJson() throws JsonProcessingException {
         List<Car> carsList = carRepository.findAll();
-        byte[] cars = gson.toJson(carsList).getBytes();
-        
+        ObjectMapper mapper = new ObjectMapper();
+        byte[] cars = mapper.writeValueAsBytes(carsList);
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=cars.json")

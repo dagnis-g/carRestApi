@@ -1,7 +1,8 @@
 package com.dagnis.carRestApi;
 
 import com.dagnis.carRestApi.model.Car;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,17 +97,17 @@ class CarRestApiApplicationTests {
     }
 
     @Test
-    public void shouldExportCorrectData() {
+    public void shouldExportCorrectData() throws JsonProcessingException {
         carRepository.deleteAll();
 
         Car car1 = new Car("JTHBE5C25A5510004", "make3", "model1", 2020, "XX1234");
         Car car2 = new Car("JTHBE5C25A5510005", "mak4", "model2", 2021, "XX5678");
         carRepository.save(car1);
         carRepository.save(car2);
-
-        Gson gson = new Gson();
+        
+        ObjectMapper mapper = new ObjectMapper();
         List<Car> carsToImport = List.of(car1, car2);
-        byte[] expected = gson.toJson(carsToImport).getBytes();
+        byte[] expected = mapper.writeValueAsBytes(carsToImport);
 
         byte[] actual = carController.exportCarJson().getBody();
 
